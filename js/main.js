@@ -3,9 +3,10 @@ console.log("Starting tinyTourneys Registration...")
 // Questions Array
 const questions = [
   {question: 'Enter Email Address', pattern: /\S+@\S+\.\S+/},
-  {question: 'Enter Team Name'},
-  {question: 'Enter Head Coach Name'},
   {question: 'Enter Director Name'},
+  {question: 'How Many Teams?', type: 'number', min: '1', max: '10'},
+  {question: 'Enter Head Coach Name'},
+  {question: 'Enter Team Name'},
   {question: 'Create Password', type: 'password'},
 ];
 
@@ -48,6 +49,12 @@ function getQuestion() {
   inputLabel.innerHTML = questions[position].question;
   // Get Current type
   inputField.type = questions[position].type || 'text';
+
+  if(inputField.type == 'number'){
+    inputField.style.min = questions[position].min;
+    inputField.style.max = questions[position].max;
+  }
+
   // Get Current Answer
   inputField.value =  questions[position].answer || '';
   // Focus on Current Element
@@ -89,7 +96,7 @@ function validate() {
   if(!inputField.value.match(questions[position].pattern || /.+/)){
     inputFail();
 
-  }else {
+  } else {
     inputPass();
   }
 }
@@ -140,7 +147,7 @@ function formComplete() {
   
   const h1 = document.createElement('h1');
   h1.classList.add('end');
-  h1.appendChild(document.createTextNode(`Thanks ${questions[2].answer}. You are now registered for our tournament`));
+  h1.appendChild(document.createTextNode(`Thanks ${questions[1].answer}. You are now registered for our tournament`));
 
   setTimeout(() => {
     formBox.parentElement.appendChild(h1);
