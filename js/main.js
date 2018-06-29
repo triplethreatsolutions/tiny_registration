@@ -2,12 +2,12 @@ console.log("Starting tinyTourneys Registration...")
 
 // Questions Array
 const questions = [
-  {question: 'Enter Email Address', pattern: /\S+@\S+\.\S+/},
+  //{question: 'Enter Email Address', pattern: /\S+@\S+\.\S+/},
   {question: 'Enter Director Name'},
   {question: 'How Many Teams?', type: 'number', min: '1', max: '10'},
-  {question: 'Enter Head Coach Name'},
-  {question: 'Enter Team Name'},
-  {question: 'Create Password', type: 'password'},
+  //{question: 'Enter Head Coach Name'},
+  //{question: 'Enter Team Name'},
+  //{question: 'Create Password', type: 'password'},
 ];
 
 // Transition Times
@@ -26,6 +26,8 @@ const inputField = document.querySelector('#input-field');
 const inputLabel = document.querySelector('#input-label');
 const inputProgress = document.querySelector('#input-progress');
 const progress = document.querySelector('#progress-bar');
+const summaryBox = document.querySelector('#summary-box');
+const summaryBody = document.querySelector('#summary-body');
 
 // Events
 // Get question on DOM load
@@ -33,6 +35,8 @@ document.addEventListener('DOMContentLoaded', getQuestion);
 
 // Next button click
 nextBtn.addEventListener('click', validate);
+// Prev button click
+prevBtn.addEventListener('click', prevQuestion)
 
 // Input Field Enter Click
 inputField.addEventListener('keyup', e => {
@@ -50,9 +54,10 @@ function getQuestion() {
   // Get Current type
   inputField.type = questions[position].type || 'text';
 
+  // Identify if field is requesting a number
   if(inputField.type == 'number'){
-    inputField.style.min = questions[position].min;
-    inputField.style.max = questions[position].max;
+    inputField.setAttribute('min', questions[position].min);
+    inputField.setAttribute('max', questions[position].max);
   }
 
   // Get Current Answer
@@ -101,6 +106,14 @@ function validate() {
   }
 }
 
+// Go back one question
+function prevQuestion() {
+  // Go back one question
+  position--;
+  // Get prev question
+  getQuestion()
+}
+
 // Field Input Failed
 function inputFail() {
   formBox.className = 'error';
@@ -140,6 +153,17 @@ function inputPass() {
   }
 }
 
+function createSummary() {
+
+  const p = document.createElement('p');
+    
+  for (let i = 0; i < position; i++) {
+    p.appendChild(document.createTextNode(`${questions[i].question}: ${questions[i].answer}.`));
+    summaryBody.parentElement.appendChild(p);
+  }
+  summaryBox.style.opacity = 1;
+}
+
 // All fields complete - show h1 end
 function formComplete() {
 
@@ -147,15 +171,12 @@ function formComplete() {
   
   const h1 = document.createElement('h1');
   h1.classList.add('end');
-  h1.appendChild(document.createTextNode(`Thanks ${questions[1].answer}. You are now registered for our tournament`));
+  h1.appendChild(document.createTextNode(`Thanks ${questions[0].answer}. You are now registered for our tournament`));
 
   setTimeout(() => {
     formBox.parentElement.appendChild(h1);
+    createSummary();
     setTimeout(() => h1.style.opacity = 1, 50)
   }, 1000)
 
 }
-
-
-
-
