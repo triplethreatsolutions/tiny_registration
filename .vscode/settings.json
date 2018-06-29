@@ -1,2 +1,11 @@
 {
+  "files.autoSave": "afterDelay",
+
+  "editor.tabSize": 2,
+
+  "editor.wordWrap": "on",
+
+  "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
+  
+  "liveServer.settings.CustomBrowser": "chrome"
 }
