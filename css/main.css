@@ -19,6 +19,12 @@ h1.end {
   transition: 0.8s ease-in-out;
 }
 
+p.summary {
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+}
+
 #container {
   height: 100vh;
   display: flex;
@@ -48,16 +54,13 @@ h1.end {
 
 #summary-box {
   position: relative;
+  background: #c9c4c4;
   padding: 30px 20px 20px 20px;
-  margin: 10px 60px 10px 10px;
+  margin: 10px 10px 10px 10px;
+  border-radius: 5px;
+  box-shadow: 0px 5px 24px #000;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
-}
-
-#summary-box.close {
-  width: 0;
-  padding: 0;
-  overflow: hidden;
 }
 
 #next-btn {
@@ -120,7 +123,7 @@ h1.end {
   transition: 0.2s ease-in-out;
 }
 
-#input-group input:valid + #input-label {
+#input-group input:valid + #input-label { 
   top: 6px;
   left: 42px;
   margin-left: 0 !important;
@@ -153,6 +156,35 @@ h1.end {
 
 .error #next-btn {
   color: red;
+}
+
+#success-check {
+  position: relative;
+  font-size: 60px;
+  color: #edfd05;
+  align-content: center;
+  z-index: 2;
+}
+
+.text-center {
+  text-align: center;
+}
+
+#print {
+  position: relative;
+  font-family: 'Pacifico', sans-serif;
+  font-size: 20px;
+  text-align: center; 
+  background: #edfd05;
+  height: 40px;
+  width: 100%;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  box-shadow: 0px 10px 25px #202020;
+}
+
+#print:hover {
+  background:  rgb(205, 255, 125);
 }
 
 @media(max-width: 600px) {

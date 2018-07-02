@@ -1,13 +1,28 @@
 console.log("Starting tinyTourneys Registration...")
 
-// Questions Array
-const questions = [
-  //{question: 'Enter Email Address', pattern: /\S+@\S+\.\S+/},
-  {question: 'Enter Director Name'},
-  {question: 'How Many Teams?', type: 'number', min: '1', max: '10'},
-  //{question: 'Enter Head Coach Name'},
-  //{question: 'Enter Team Name'},
-  //{question: 'Create Password', type: 'password'},
+// List of Tournaments
+const tournaments = [
+  {name: '#girlsgotgame Spring Kick-off'},
+  {name: 'February Classic'},
+  {name: 'LaCrosse Memorial Classic'},
+]
+
+// Basic Questions Array
+const basic_questions = [
+  {label: 'Email', question: 'Enter Email Address', pattern: /\S+@\S+\.\S+/},
+  {label: 'Director', question: 'Enter Director Name'},
+  //{label: 'Phone', question: 'Enter Director Phone #', type: 'tel', pattern: '[0-9]{3}-[0-9]{3}-[0-9]{4}'},
+  {label: '# Teams', question: 'How Many Teams', type: 'number', min: '1', max: '10'},
+  // {label: 'Password', question: 'Create Password', type: 'password'},
+];
+
+// Team Questions Array
+const team_questions = [
+  {label: 'Email', question: 'Enter Email Address', pattern: /\S+@\S+\.\S+/},
+  {label: 'Head Coach', question: 'Enter Head Coach Name'},
+  //{label: 'Phone', question: 'Enter Coach Phone #'},
+  {label: 'Team', question: 'Enter Team Name'},
+  {label: 'Requests', question: 'Enter Special Request'},
 ];
 
 // Transition Times
@@ -28,6 +43,7 @@ const inputProgress = document.querySelector('#input-progress');
 const progress = document.querySelector('#progress-bar');
 const summaryBox = document.querySelector('#summary-box');
 const summaryBody = document.querySelector('#summary-body');
+const tournamenSelected = document.querySelector('#tournament-selected');
 
 // Events
 // Get question on DOM load
@@ -45,28 +61,54 @@ inputField.addEventListener('keyup', e => {
   }
 })
 
+// Input Field Number Range verification
+inputField.addEventListener('keydown', e => {
+  // Determin if this is an input number element
+  if(inputField.type == 'number') {
+    // Allow only backspace and delete
+    if ( event.keyCode == 46 || event.keyCode == 8) {
+      // let it happen, don't do anything
+
+    } else if((inputField.value + String.fromCharCode(e.keyCode)) > 9) {
+      console.log("Value to high: " + inputField.value);
+      // Cancel this key event
+      e.preventDefault();
+    
+    } else if(e.keyCode < 49 || e.keyCode > 57) {
+      console.log("Not a valid digit: KeyCode " + e.keyCode);
+      // Cancel this key event
+      e.preventDefault();
+    }
+  }
+})
+
 // Functions
+// Get tournaments from list
+function getTournament() {
+
+}
+
 // Get question from arrary and add to markup
 function getQuestion() {
   console.log("get questions..")
   // Get Current question
-  inputLabel.innerHTML = questions[position].question;
+  inputLabel.innerHTML = basic_questions[position].question;
   // Get Current type
-  inputField.type = questions[position].type || 'text';
+  inputField.type = basic_questions[position].type || 'text';
 
   // Identify if field is requesting a number
   if(inputField.type == 'number'){
-    inputField.setAttribute('min', questions[position].min);
-    inputField.setAttribute('max', questions[position].max);
+    inputField.setAttribute('min', basic_questions[position].min);
+    inputField.setAttribute('max', basic_questions[position].max);
   }
 
   // Get Current Answer
-  inputField.value =  questions[position].answer || '';
+  inputField.value =  basic_questions[position].answer || '';
   // Focus on Current Element
   inputField.focus();
 
   // Set Progress Bar Width - Variable to questions length array
-  progress.style.width = (position * 100) / questions.length + '%';
+  progress.style.width = (position * 100) / basic_questions.length + '%';
 
   // Add User Icon OR back arrow depending on question
   prevBtn.className = position ? 'fas fa-arrow-left' : 'fas fa-user';
@@ -98,7 +140,7 @@ function transform(x, y){
 // Validate Field
 function validate() {
   // Make sure pattern matches, if available
-  if(!inputField.value.match(questions[position].pattern || /.+/)){
+  if(!inputField.value.match(basic_questions[position].pattern || /.+/)){
     inputFail();
 
   } else {
@@ -133,13 +175,13 @@ function inputPass() {
   setTimeout(transform, shakeTime * 1, 0, 0);
 
   // Store Answer in Arrary
-  questions[position].answer = inputField.value;
+  basic_questions[position].answer = inputField.value;
 
   // Increment Position
   position++;
 
   // If new question, hide current and get next
-  if(questions[position]){
+  if(basic_questions[position]){
     hideQuestion();
     getQuestion();
   } else {
@@ -155,11 +197,25 @@ function inputPass() {
 
 function createSummary() {
 
-  const p = document.createElement('p');
-    
+  // Display selected tournament for registration
+  tournamenSelected.innerHTML = tournaments[2].name;
+   
   for (let i = 0; i < position; i++) {
-    p.appendChild(document.createTextNode(`${questions[i].question}: ${questions[i].answer}.`));
-    summaryBody.parentElement.appendChild(p);
+    const p = document.createElement('p');
+    const hr = document.createElement('hr');
+    p.classList.add('summary');
+
+    switch(basic_questions[i].label) {
+
+      case 'Password':
+        // skip password answer
+        break;
+
+      default:
+        p.appendChild(document.createTextNode(`${basic_questions[i].label}: ${basic_questions[i].answer}`));
+        p.appendChild(hr);
+        summaryBody.appendChild(p);
+    }
   }
   summaryBox.style.opacity = 1;
 }
@@ -167,11 +223,11 @@ function createSummary() {
 // All fields complete - show h1 end
 function formComplete() {
 
-  console.log(questions);
+  console.log(basic_questions);
   
   const h1 = document.createElement('h1');
   h1.classList.add('end');
-  h1.appendChild(document.createTextNode(`Thanks ${questions[0].answer}. You are now registered for our tournament`));
+  h1.appendChild(document.createTextNode(`Thanks ${basic_questions[0].answer}. You are now registered for our tournament!`));
 
   setTimeout(() => {
     formBox.parentElement.appendChild(h1);
