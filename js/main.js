@@ -37,9 +37,6 @@ const formBox = document.querySelector('#form-box');
 const nextBtn = document.querySelector('#next-btn');
 const prevBtn = document.querySelector('#prev-btn');
 const selectGroup = document.querySelector('#select-group');
-const selectField = document.querySelector('#select-field');
-const selectLabel = document.querySelector('#select-label');
-const selectProgress = document.querySelector('#select-progress');
 const inputGroup = document.querySelector('#input-group');
 const inputField = document.querySelector('#input-field');
 const inputLabel = document.querySelector('#input-label');
@@ -90,6 +87,21 @@ inputField.addEventListener('keydown', e => {
 // Get tournaments from list
 function getTournament() {
   console.log("select tournament..")
+
+  const div = document.createElement('div');
+
+  div.innerHTML = `
+  <div class="row">
+  <select id="select-field" required>
+    <option value="none" selected>-- Select Tournament --</option> 
+  </select>
+  <div id="select-progress"></div>
+  </div>`;
+
+  selectGroup.appendChild(div);
+
+  const selectField = document.querySelector('#select-field');
+  const selectProgress = document.querySelector('#select-progress');
 
   // Add tournament options
   for(i = 0; i < tournaments.length; i++) {
