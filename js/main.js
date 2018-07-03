@@ -13,7 +13,7 @@ const basic_questions = [
   {label: 'Director', question: 'Enter Director Name'},
   //{label: 'Phone', question: 'Enter Director Phone #', type: 'tel', pattern: '[0-9]{3}-[0-9]{3}-[0-9]{4}'},
   {label: '# Teams', question: 'How Many Teams', type: 'number', min: '1', max: '10'},
-  // {label: 'Password', question: 'Create Password', type: 'password'},
+  //{label: 'Password', question: 'Create Password', type: 'password'},
 ];
 
 // Team Questions Array
@@ -36,6 +36,10 @@ let position = 0;
 const formBox = document.querySelector('#form-box');
 const nextBtn = document.querySelector('#next-btn');
 const prevBtn = document.querySelector('#prev-btn');
+const selectGroup = document.querySelector('#select-group');
+const selectField = document.querySelector('#select-field');
+const selectLabel = document.querySelector('#select-label');
+const selectProgress = document.querySelector('#select-progress');
 const inputGroup = document.querySelector('#input-group');
 const inputField = document.querySelector('#input-field');
 const inputLabel = document.querySelector('#input-label');
@@ -43,11 +47,11 @@ const inputProgress = document.querySelector('#input-progress');
 const progress = document.querySelector('#progress-bar');
 const summaryBox = document.querySelector('#summary-box');
 const summaryBody = document.querySelector('#summary-body');
-const tournamenSelected = document.querySelector('#tournament-selected');
+const tournamentSelected = document.querySelector('#tournament-selected');
 
 // Events
 // Get question on DOM load
-document.addEventListener('DOMContentLoaded', getQuestion);
+document.addEventListener('DOMContentLoaded', getTournament);
 
 // Next button click
 nextBtn.addEventListener('click', validate);
@@ -85,10 +89,28 @@ inputField.addEventListener('keydown', e => {
 // Functions
 // Get tournaments from list
 function getTournament() {
+  console.log("select tournament..")
+
+  // Add tournament options
+  for(i = 0; i < tournaments.length; i++) {
+    const op = document.createElement('option');
+    op.appendChild(document.createTextNode(tournaments[i].name));
+    selectField.appendChild(op);
+  }
+  
+  // Focus on Current Element
+  selectField.focus();
+
+  selectGroup.style.opacity = 1;
+  selectProgress.style.transition = '';
+  selectProgress.style.width = '100%';
+
+  // Get first basic question
+  //getQuestion()
 
 }
 
-// Get question from arrary and add to markup
+// Get question from array and add to markup
 function getQuestion() {
   console.log("get questions..")
   // Get Current question
@@ -198,7 +220,7 @@ function inputPass() {
 function createSummary() {
 
   // Display selected tournament for registration
-  tournamenSelected.innerHTML = tournaments[2].name;
+  tournamentSelected.innerHTML = tournaments[2].name;
    
   for (let i = 0; i < position; i++) {
     const p = document.createElement('p');

@@ -10,12 +10,18 @@
     <link rel="stylesheet" href="css/main.css">
     <title>tinyTourneys Registration</title>
 </head>
-<body>
+<body class="wallpaper">
     <div id="container">
-        <h1 class="logo">Tournament Registration</h1>
+        <h1 class="logo">tinyTourneys Registration</h1>
         <div id="form-box" class="">
             <i id="prev-btn" class="fas fa-arrow-left"></i>
             <i id="next-btn" class="fas fa-arrow-right"></i>
+            <div id="select-group">
+                <select id="select-field" required>
+                    <option value="none" selected>-- Select Tournament --</option>
+                </select>
+                <div id="select-progress"></div>
+            </div>
             <div id="input-group">
                 <input id="input-field" required>
                 <label id="input-label"></label>
@@ -44,6 +50,10 @@
             </div>
         </div>
     </div>
+    <!-- Footer -->
+    <footer>
+        <p class="copyright">Copyright &copy; tinyTourneys.com 2018</p>
+    </footer>
     <script src="js/main.js"></script>
 </body>
 </html>
