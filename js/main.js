@@ -1,5 +1,8 @@
 console.log("Starting tinyTourneys Registration...")
 
+
+let formState = 'tournaments'
+
 // List of Tournaments
 const tournaments = [
   {name: '#girlsgotgame Spring Kick-off'},
@@ -86,7 +89,10 @@ inputField.addEventListener('keydown', e => {
 // Functions
 // Get tournaments from list
 function getTournament() {
-  console.log("select tournament..")
+  console.log("Get tournament..")
+
+  // Temporarily remove input group from DOM
+  inputGroup.style.display = 'none';
 
   const div = document.createElement('div');
 
@@ -98,6 +104,7 @@ function getTournament() {
   <div id="select-progress"></div>
   </div>`;
 
+  // Add Select Tournament drop down to DOM
   selectGroup.appendChild(div);
 
   const selectField = document.querySelector('#select-field');
@@ -117,13 +124,13 @@ function getTournament() {
   selectProgress.style.transition = '';
   selectProgress.style.width = '100%';
 
-  // Get first basic question
-  //getQuestion()
-
-}
+ }
 
 // Get question from array and add to markup
 function getQuestion() {
+
+  formState = 'basic_questions';
+
   console.log("get questions..")
   // Get Current question
   inputLabel.innerHTML = basic_questions[position].question;
@@ -152,6 +159,7 @@ function getQuestion() {
 
 // Display question to user
 function showQuestion(){
+  console.log("show question..")
   inputGroup.style.opacity = 1;
   inputProgress.style.transition = '';
   inputProgress.style.width = '100%';
@@ -159,6 +167,7 @@ function showQuestion(){
 
 // Hide Question from User
 function hideQuestion() {
+  console.log("hide questions..")
   inputGroup.style.opacity = 0;
   inputLabel.style.marginLeft = 0;
   inputProgress.style.width = 0;
@@ -168,18 +177,41 @@ function hideQuestion() {
 
 // Transform to Create Shake Motion
 function transform(x, y){
+  console.log("transform for shake motion..")
   formBox.style.transform = `translate(${x}px, ${y}px)`
 }
 
 // Validate Field
 function validate() {
-  // Make sure pattern matches, if available
-  if(!inputField.value.match(basic_questions[position].pattern || /.+/)){
-    inputFail();
+  console.log("validate field..")
 
-  } else {
-    inputPass();
+  switch(formState) {
+
+    case 'tournaments':
+      // save tournament selection
+      tournamentSelected.innerHTML = document.getElementById("select-field").value;
+      // Remove select group from DOM
+      selectGroup.style.display = 'none';
+      // Add input group back to DOM
+      inputGroup.style.display = 'inherit';
+      // Get first basic question
+      getQuestion()
+      break;
+
+    case 'basic_questions':
+      // Make sure pattern matches, if available
+      if(!inputField.value.match(basic_questions[position].pattern || /.+/)){
+        inputFail();
+
+      } else {
+        inputPass();
+      }
+      break;
+    default:
+    break;
+     
   }
+
 }
 
 // Go back one question
@@ -192,6 +224,7 @@ function prevQuestion() {
 
 // Field Input Failed
 function inputFail() {
+  console.log("input failed..")
   formBox.className = 'error';
   // Repeat shake motion, set i to number of shakes
   for(let i = 0; i < 6; i++){
@@ -204,6 +237,7 @@ function inputFail() {
 
 // Field Input Passed
 function inputPass() {
+  console.log("input passed..")
   formBox.className = '';
   setTimeout(transform, shakeTime * 0, 0, 10);
   setTimeout(transform, shakeTime * 1, 0, 0);
@@ -231,9 +265,8 @@ function inputPass() {
 
 function createSummary() {
 
-  // Display selected tournament for registration
-  tournamentSelected.innerHTML = tournaments[2].name;
-   
+  console.log("create summary..")
+ 
   for (let i = 0; i < position; i++) {
     const p = document.createElement('p');
     const hr = document.createElement('hr');
@@ -257,7 +290,7 @@ function createSummary() {
 // All fields complete - show h1 end
 function formComplete() {
 
-  console.log(basic_questions);
+  console.log("form complete...")
   
   const h1 = document.createElement('h1');
   h1.classList.add('end');
