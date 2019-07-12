@@ -12,7 +12,7 @@ const tournaments = [
 
 // Basic Questions Array
 const basic_questions = [
-  {label: 'Email', question: 'Enter Email Address', pattern: /\S+@\S+\.\S+/},
+ // {label: 'Email', question: 'Enter Email Address', pattern: /\S+@\S+\.\S+/},
   {label: 'Director', question: 'Enter Director Name'},
   //{label: 'Phone', question: 'Enter Director Phone #', type: 'tel', pattern: '[0-9]{3}-[0-9]{3}-[0-9]{4}'},
   {label: '# Teams', question: 'How Many Teams', type: 'number', min: '1', max: '10'},
@@ -46,7 +46,7 @@ const inputLabel = document.querySelector('#input-label');
 const inputProgress = document.querySelector('#input-progress');
 const progress = document.querySelector('#progress-bar');
 const summaryBox = document.querySelector('#summary-box');
-const summaryBody = document.querySelector('#summary-body');
+const summaryForm = document.querySelector('#summary-form');
 const tournamentSelected = document.querySelector('#tournament-selected');
 
 // Events
@@ -131,7 +131,7 @@ function getQuestion() {
 
   formState = 'basic_questions';
 
-  console.log("get questions..")
+  console.log("get questions...Count: " + basic_questions.length + " Position: " + position)
   // Get Current question
   inputLabel.innerHTML = basic_questions[position].question;
   // Get Current type
@@ -177,25 +177,33 @@ function hideQuestion() {
 
 // Transform to Create Shake Motion
 function transform(x, y){
-  console.log("transform for shake motion..")
   formBox.style.transform = `translate(${x}px, ${y}px)`
 }
 
 // Validate Field
 function validate() {
-  console.log("validate field..")
+  console.log("Validate()...Form State: " + formState)
 
   switch(formState) {
 
     case 'tournaments':
       // save tournament selection
       tournamentSelected.innerHTML = document.getElementById("select-field").value;
-      // Remove select group from DOM
-      selectGroup.style.display = 'none';
-      // Add input group back to DOM
-      inputGroup.style.display = 'inherit';
-      // Get first basic question
-      getQuestion()
+      if(tournamentSelected.innerHTML == 'none')
+      {
+        inputFail();
+      }
+      else{
+
+        console.log("Tournament Selected: " + tournamentSelected.innerHTML)
+        // Remove select group from DOM
+        selectGroup.style.display = 'none';
+        // Add input group back to DOM
+        inputGroup.style.display = 'inherit';
+        // Get first basic question
+        getQuestion()
+
+      }
       break;
 
     case 'basic_questions':
@@ -237,7 +245,7 @@ function inputFail() {
 
 // Field Input Passed
 function inputPass() {
-  console.log("input passed..")
+  console.log("input passed...Input Value: " + inputField.value)
   formBox.className = '';
   setTimeout(transform, shakeTime * 0, 0, 10);
   setTimeout(transform, shakeTime * 1, 0, 0);
@@ -255,22 +263,28 @@ function inputPass() {
   } else {
     // Remove If no More questions
     hideQuestion();
-    formBox.className = 'close';
-    progress.style.width = '100%';
-
+    // Remove from DOM
+    formBox.style.display = 'none'
     // Form Complete
     formComplete();
   }
 }
 
-function createSummary() {
+function DisplayRegistrationDetails() {
 
-  console.log("create summary..")
- 
-  for (let i = 0; i < position; i++) {
-    const p = document.createElement('p');
-    const hr = document.createElement('hr');
-    p.classList.add('summary');
+  console.log("Display Registration Details...")
+
+   
+  for (let i = 0; i < basic_questions.length; i++) {
+    const label = document.createElement('label');
+    label.classList.add('summary');
+
+    // Create form-group div element for each registration item
+    const form_div = document.createElement('div');
+    form_div.className = 'form-group'
+    form_div.setAttribute('id', "item" + i)
+    // Add to DOM
+    summaryForm.appendChild(form_div);
 
     switch(basic_questions[i].label) {
 
@@ -279,27 +293,40 @@ function createSummary() {
         break;
 
       default:
-        p.appendChild(document.createTextNode(`${basic_questions[i].label}: ${basic_questions[i].answer}`));
-        p.appendChild(hr);
-        summaryBody.appendChild(p);
+        // Fetch registration response and assign to label element
+        label.appendChild(document.createTextNode(`${basic_questions[i].label}: ${basic_questions[i].answer}`));
+        formId = document.querySelector('#item' + i);
+        // Add to DOM        
+        formId.appendChild(label);
+
     }
   }
+  // Add button element 
+  const button = document.createElement('button')
+  button.className = 'btn btn-primary form-group';
+  button.type = 'submit'
+  button.innerHTML = 'Print Copy';
+  summaryForm.appendChild(button)
+
+  // Add thank you statement
+  const thankyou_div = document.createElement('div');
+  const thankyou_header = document.createElement('h3');
+  thankyou_div.appendChild(thankyou_header);
+  thankyou_header.classList.add('end');
+  thankyou_header.appendChild(document.createTextNode(`Thanks ${basic_questions[0].answer}. You are now registered for our tournament!`));
+  summaryForm.appendChild(thankyou_div);
+
+  // Make parent element visible to DOM
   summaryBox.style.opacity = 1;
 }
 
-// All fields complete - show h1 end
+// All fields complete
 function formComplete() {
 
   console.log("form complete...")
   
-  const h1 = document.createElement('h1');
-  h1.classList.add('end');
-  h1.appendChild(document.createTextNode(`Thanks ${basic_questions[0].answer}. You are now registered for our tournament!`));
-
   setTimeout(() => {
-    formBox.parentElement.appendChild(h1);
-    createSummary();
-    setTimeout(() => h1.style.opacity = 1, 50)
-  }, 1000)
+    DisplayRegistrationDetails();
+  }, 250)
 
 }
