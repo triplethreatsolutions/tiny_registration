@@ -193,7 +193,7 @@ p.copyright {
   color: #fff;
 }
 
-.error #input-progress #select-progress {
+.error #select-progress, .error #input-progress {
   border-color: red;
 }
 

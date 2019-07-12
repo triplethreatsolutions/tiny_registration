@@ -48,6 +48,8 @@ const progress = document.querySelector('#progress-bar');
 const summaryBox = document.querySelector('#summary-box');
 const summaryForm = document.querySelector('#summary-form');
 const tournamentSelected = document.querySelector('#tournament-selected');
+let selectField = null;
+let selectProgress = null;
 
 // Events
 // Get question on DOM load
@@ -87,28 +89,28 @@ inputField.addEventListener('keydown', e => {
 })
 
 // Functions
-// Get tournaments from list
-function getTournament() {
-  console.log("Get tournament..")
 
-  // Temporarily remove input group from DOM
-  inputGroup.style.display = 'none';
+// Create get tournament form
+function CreateTournamentSelectForm() {
+  console.log ("Creating tournament form...");
 
-  const div = document.createElement('div');
+  const select_select = document.createElement('select');
+  select_select.setAttribute('id', "select-field");
+  select_select.required = true;
 
-  div.innerHTML = `
-  <div class="row">
-  <select id="select-field" required>
-    <option value="none" selected>-- Select Tournament --</option> 
-  </select>
-  <div id="select-progress"></div>
-  </div>`;
+  select_select.innerHTML = `
+    <option value="none" selected>-- Select Tournament --</option>`;
+
+  // Create select progress element
+  const select_progress = document.createElement('div');
+  select_progress.setAttribute('id', "select-progress");
 
   // Add Select Tournament drop down to DOM
-  selectGroup.appendChild(div);
+  selectGroup.appendChild(select_select);
+  selectGroup.appendChild(select_progress);
 
-  const selectField = document.querySelector('#select-field');
-  const selectProgress = document.querySelector('#select-progress');
+  selectField = document.querySelector('#select-field');
+  selectProgress = document.querySelector('#select-progress');
 
   // Add tournament options
   for(i = 0; i < tournaments.length; i++) {
@@ -116,6 +118,16 @@ function getTournament() {
     op.appendChild(document.createTextNode(tournaments[i].name));
     selectField.appendChild(op);
   }
+}
+
+// Get tournaments from list
+function getTournament() {
+  console.log("Get tournament..")
+
+  // Temporarily remove input group from DOM
+  inputGroup.style.display = 'none';
+
+  CreateTournamentSelectForm();
   
   // Focus on Current Element
   selectField.focus();
@@ -196,6 +208,9 @@ function validate() {
       else{
 
         console.log("Tournament Selected: " + tournamentSelected.innerHTML)
+        formBox.className = '';
+        selectGroup.className = '';
+        inputGroup.className = '';
         // Remove select group from DOM
         selectGroup.style.display = 'none';
         // Add input group back to DOM
@@ -234,6 +249,8 @@ function prevQuestion() {
 function inputFail() {
   console.log("input failed..")
   formBox.className = 'error';
+  selectGroup.className = 'error';
+  inputGroup.className = 'error';
   // Repeat shake motion, set i to number of shakes
   for(let i = 0; i < 6; i++){
     setTimeout(transform, shakeTime * i, ((i % 2) * 2 - 1)* 20, 0);
@@ -247,6 +264,8 @@ function inputFail() {
 function inputPass() {
   console.log("input passed...Input Value: " + inputField.value)
   formBox.className = '';
+  selectGroup.className = '';
+  inputGroup.className = '';
   setTimeout(transform, shakeTime * 0, 0, 10);
   setTimeout(transform, shakeTime * 1, 0, 0);
 
@@ -310,7 +329,7 @@ function DisplayRegistrationDetails() {
 
   // Add thank you statement
   const thankyou_div = document.createElement('div');
-  const thankyou_header = document.createElement('h3');
+  const thankyou_header = document.createElement('h4');
   thankyou_div.appendChild(thankyou_header);
   thankyou_header.classList.add('end');
   thankyou_header.appendChild(document.createTextNode(`Thanks ${basic_questions[0].answer}. You are now registered for our tournament!`));
